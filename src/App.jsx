@@ -1,14 +1,13 @@
-
+import ItemListContainer from "./Components/ItemListContainer";
+import Navbar from "./Components/Navbar";
 
 function App() {
-  
-
   return (
     <>
-      <h1 className="text-2xl">Hola e-commerce</h1>
-
+      <Navbar />
+      <ItemListContainer text="Bienvenido a nuestra tienda de productos" />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
