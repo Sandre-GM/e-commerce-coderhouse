@@ -1,6 +1,7 @@
 import { RiShoppingCart2Fill, RiSearch2Line } from "react-icons/ri";
+import { Link } from "react-router-dom";
 export default function ItemCard(product) {
-  console.log(product);
+  console.log(product.product.id);
   return (
     <div className="relative flex flex-col gap-3 p-4 w-56 bg-zinc-800 rounded-2xl">
       <div className="relative z-[5] w-full h-32 bg-white rounded-lg overflow-hidden cursor-pointer">
@@ -24,10 +25,13 @@ export default function ItemCard(product) {
           <RiShoppingCart2Fill />
           <span>Añadir al carrito</span>
         </button>
-        <button className="flex items-center justify-center gap-1 p-2 w-full text-sm font-medium text-zinc-100 whitespace-nowrap  rounded-lg cursor-pointer  shadow-[inset_0_0_0.25rem_1px_#d9d9d9]">
+        <Link
+          to={`/product/${product.product.id}`}
+          className="flex items-center justify-center gap-1 p-2 w-full text-sm font-medium text-zinc-100 whitespace-nowrap  rounded-lg cursor-pointer  shadow-[inset_0_0_0.25rem_1px_#d9d9d9]"
+        >
           <RiSearch2Line />
           <span>Ver detalles</span>
-        </button>
+        </Link>
       </div>
     </div>
   );

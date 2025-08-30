@@ -10,7 +10,8 @@ export default function Navbar() {
           <Link to="/">About</Link>
         </ul>
         <ul className="flex justify-end gap-10 w-full text-white font-mono p-2">
-          <Link to="/">Categorias</Link>
+          <p>Categorias:</p>
+          <Link to="/product/Joyeria">Joyeria</Link>
           <CartWidget />
         </ul>
       </nav>

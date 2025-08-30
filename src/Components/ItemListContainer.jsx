@@ -10,7 +10,14 @@ export default function ItemListContainer(props) {
     const fetchProducts = async () => {
       try {
         const data = await getProducts();
-        setProducts(data);
+        if (props.category) {
+          const filtered = data.filter(
+            (product) => product.category === props.category
+          );
+          setProducts(filtered);
+        } else {
+          setProducts(data);
+        }
         console.log(data);
       } catch (error) {
         console.error("Error al obtener los productos:", error);
@@ -19,12 +26,12 @@ export default function ItemListContainer(props) {
       }
     };
     fetchProducts();
-  }, []); //
+  }, [props.category]); //
 
   return (
     <>
       <h2 className="text-2xl bg-gray-600 text-white text-center uppercase py-3 font-light">
-        {props.text}
+        {props.category ? props.category.toUpperCase() : props.text}
       </h2>
       {loading ? (
         <h2 className="text-center text-6xl m-10 font-mono  text-white">
