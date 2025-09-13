@@ -19,3 +19,14 @@ export async function getProductById(id) {
     console.log(error);
   }
 }
+
+export async function getProductsByCategory(category) {
+  try {
+    const response = await fetch(`https://fakestoreapi.com/products/category/${category}`);
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}

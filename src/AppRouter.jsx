@@ -11,8 +11,8 @@ function AppRouter() {
         <Route path="/" element={<HomePage />} />
         <Route path="/product/:id" element={<ItemDetailContainer />} />
         <Route
-          path="/product/joyeria"
-          element={<ItemListContainer category="jewelery" text="Joyeria" />}
+          path="/products/:category"
+          element={<ItemListContainer text="Productos" />}
         />
       </Route>
     </Routes>

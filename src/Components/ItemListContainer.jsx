@@ -1,23 +1,27 @@
 import { useEffect, useState } from "react";
-import { getProducts } from "../Services/eCommerceService";
-import ItemCard from "./ItemCard";
+import { useParams } from "react-router-dom";
+import {
+  getProducts,
+  getProductsByCategory,
+} from "../Services/eCommerceService";
+
+import ItemList from "./ItemList";
 
 export default function ItemListContainer(props) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { category } = useParams();
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getProducts();
-        if (props.category) {
-          const filtered = data.filter(
-            (product) => product.category === props.category
-          );
-          setProducts(filtered);
+        let data;
+        if (category) {
+          data = await getProductsByCategory(category);
         } else {
-          setProducts(data);
+          data = await getProducts();
         }
+        setProducts(data);
         console.log(data);
       } catch (error) {
         console.error("Error al obtener los productos:", error);
@@ -26,12 +30,12 @@ export default function ItemListContainer(props) {
       }
     };
     fetchProducts();
-  }, [props.category]); //
+  }, [category]);
 
   return (
     <>
       <h2 className="text-2xl bg-gray-600 text-white text-center uppercase py-3 font-light">
-        {props.category ? props.category.toUpperCase() : props.text}
+        {category ? category.toUpperCase() : props.text}
       </h2>
       {loading ? (
         <h2 className="text-center text-6xl m-10 font-mono  text-white">
@@ -42,11 +46,7 @@ export default function ItemListContainer(props) {
           Nuestros productos :
         </h2>
       )}
-      <div className="flex gap-5 flex-wrap justify-center px-75 py-15">
-        {products.map((product) => (
-          <ItemCard key={product.id} product={product} />
-        ))}
-      </div>
+      <ItemList products={products} />
     </>
   );
 }
