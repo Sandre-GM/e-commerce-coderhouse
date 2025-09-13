@@ -1,5 +1,8 @@
 import { RiShoppingCart2Fill, RiSearch2Line } from "react-icons/ri";
 import { Link } from "react-router-dom";
+
+
+
 export default function ItemCard(product) {
   console.log(product.product.id);
   return (
