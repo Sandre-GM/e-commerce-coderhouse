@@ -4,14 +4,11 @@ import { Link } from "react-router-dom";
 
 export default function CartDropdown({ isOpen, onClose }) {
   const { cart, removeFromCart, addToCart, getTotalPrice } = useCart();
-
   if (!isOpen) return null;
-
   const handleIncreaseQuantity = (item) => {
     const updatedItem = { ...item, quantity: 1 };
     addToCart(updatedItem);
   };
-
   const handleDecreaseQuantity = (item) => {
     if (item.quantity > 1) {
       const updatedItem = { ...item, quantity: -1 };
@@ -24,7 +21,6 @@ export default function CartDropdown({ isOpen, onClose }) {
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-
       <div className="absolute right-0 top-full mt-2 w-80 bg-zinc-800 border border-zinc-700 rounded-lg shadow-xl z-50">
         <div className="p-4">
           <h3 className="text-white font-semibold text-lg mb-3">
@@ -85,7 +81,6 @@ export default function CartDropdown({ isOpen, onClose }) {
                   </div>
                 ))}
               </div>
-
               <div className="border-t border-zinc-700 pt-3 mt-3">
                 <div className="flex justify-between items-center mb-3">
                   <span className="text-white font-semibold">Total:</span>
