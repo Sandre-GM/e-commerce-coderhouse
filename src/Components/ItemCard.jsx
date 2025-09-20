@@ -6,7 +6,7 @@ export default function ItemCard({ product }) {
   return (
     <div className="relative flex flex-col gap-3 p-4 w-56 bg-zinc-800 rounded-2xl">
       <div className="relative z-[5] w-full h-32 bg-white rounded-lg overflow-hidden cursor-pointer">
-        <img src={product.image} alt="imagen del producto" />
+        <img src={product.image} alt={product.title} />
       </div>
 
       <div className="truncate text-base font-semibold text-white capitalize">
