@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getProductById } from "../Services/eCommerceService";
 import ItemDetail from "./ItemDetail";
@@ -43,9 +43,7 @@ export default function ItemDetailContainer() {
 
   return (
     <>
-    <ItemDetail
-    product={product}
-    />
+      <ItemDetail product={product} />
     </>
   );
 }
