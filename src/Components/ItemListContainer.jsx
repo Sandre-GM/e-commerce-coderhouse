@@ -22,7 +22,6 @@ export default function ItemListContainer(props) {
           data = await getProducts();
         }
         setProducts(data);
-        console.log(data);
       } catch (error) {
         console.error("Error al obtener los productos:", error);
       } finally {

@@ -5,7 +5,6 @@ import ItemDetail from "./ItemDetail";
 
 export default function ItemDetailContainer() {
   const { id } = useParams();
-  console.log(id);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +12,6 @@ export default function ItemDetailContainer() {
     const fetchProduct = async () => {
       try {
         const data = await getProductById(id);
-        console.log(data);
         setProduct(data);
       } catch (error) {
         console.error("Error al obtener los productos:", error);

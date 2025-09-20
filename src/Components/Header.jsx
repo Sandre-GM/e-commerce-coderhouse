@@ -10,7 +10,6 @@ export default function Navbar() {
       <nav className="flex px-20 items-center gap-5">
         <ul className="flex gap-10 w-full text-white font-mono p-2">
           <Link to="/">Inicio</Link>
-          <Link to="/">About</Link>
         </ul>
         <ul className="flex justify-end gap-10 w-full text-white font-mono p-2 items-center">
           <div className="relative">

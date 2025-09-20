@@ -1,6 +1,11 @@
-import { RiDeleteBin6Line, RiAddLine, RiSubtractLine } from "react-icons/ri";
 import { useCart } from "../context/CartContext";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { createOrder } from "../Services/orderService";
+import EmptyCart from "../Components/EmptyCart";
+import OrderSuccess from "../Components/OrderSuccess";
+import CartList from "../Components/CartList";
+import CartSummary from "../Components/CartSummary";
+import CheckoutSection from "../Components/CheckoutSection";
 
 export default function CartPage() {
   const {
@@ -11,6 +16,12 @@ export default function CartPage() {
     getTotalItems,
     clearCart,
   } = useCart();
+
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderComplete, setOrderComplete] = useState(false);
+  const [orderId, setOrderId] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleIncreaseQuantity = (item) => {
     const updatedItem = { ...item, quantity: 1 };
@@ -26,124 +37,91 @@ export default function CartPage() {
     }
   };
 
-  if (cart.length === 0) {
-    return (
-      <div className="min-h-screen bg-zinc-900 pt-20 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-zinc-800 border border-zinc-700 rounded-lg p-8 text-center">
-            <h1 className="text-white text-3xl font-bold mb-4">
-              Carrito de Compras
-            </h1>
-            <p className="text-zinc-400 text-lg mb-6">Tu carrito está vacío</p>
-            <Link
-              to="/"
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
-            >
-              Continuar Comprando
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
+  const handleCheckoutSubmit = async (userData) => {
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const result = await createOrder(userData, cart);
+
+      if (result.success) {
+        setOrderId(result.orderId);
+        setOrderComplete(true);
+        clearCart();
+      } else {
+        setError(result.error || "Error al procesar la orden");
+      }
+    } catch (err) {
+      setError("Error al procesar la orden. Por favor intenta de nuevo.");
+      console.error("Error:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleStartCheckout = () => {
+    if (cart.length > 0) {
+      setShowCheckout(true);
+    }
+  };
+
+  const handleBackToCart = () => {
+    setShowCheckout(false);
+    setOrderComplete(false);
+    setOrderId(null);
+    setError(null);
+  };
+
+  if (cart.length === 0 && !orderComplete) {
+    return <EmptyCart />;
+  }
+
+  if (orderComplete) {
+    return <OrderSuccess orderId={orderId} onBackToCart={handleBackToCart} />;
   }
 
   return (
     <div className="min-h-screen bg-zinc-900 pt-20 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-zinc-800 border border-zinc-700 rounded-lg overflow-hidden">
-          <div className="bg-zinc-700 px-6 py-4 border-b border-zinc-600">
-            <div className="flex justify-between items-center">
-              <h1 className="text-white text-2xl font-bold">
-                Carrito de Compras ({getTotalItems()} producto/s)
-              </h1>
-              <button
-                onClick={clearCart}
-                className="text-red-400 hover:text-red-300 text-sm font-medium transition-colors"
-              >
-                Vaciar carrito
-              </button>
-            </div>
-          </div>
-
-          <div className="p-6">
-            <div className="space-y-4">
-              {cart.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center gap-6 p-4 bg-zinc-700 rounded-lg"
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-zinc-800 border border-zinc-700 rounded-lg overflow-hidden">
+            <div className="bg-zinc-700 px-6 py-4 border-b border-zinc-600">
+              <div className="flex justify-between items-center">
+                <h1 className="text-white text-2xl font-bold">
+                  Carrito de Compras ({getTotalItems()} items)
+                </h1>
+                <button
+                  onClick={clearCart}
+                  className="text-red-400 hover:text-red-300 text-sm font-medium transition-colors"
                 >
-                  <div className="flex-shrink-0">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-24 h-24 object-cover rounded-lg"
-                    />
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-white font-semibold text-lg mb-1 truncate">
-                      {item.title}
-                    </h3>
-                    <p className="text-zinc-400 text-sm mb-2">
-                      ${item.price.toFixed(2)} c/u
-                    </p>
-                    <div className="flex items-center gap-4">
-                      <span className="text-zinc-300 text-sm">
-                        Subtotal: ${(item.price * item.quantity).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => handleDecreaseQuantity(item)}
-                      className="flex items-center justify-center w-8 h-8 text-white bg-zinc-600 rounded hover:bg-zinc-500 transition-colors"
-                    >
-                      <RiSubtractLine size={16} />
-                    </button>
-
-                    <span className="text-white font-semibold min-w-[2rem] text-center text-lg">
-                      {item.quantity}
-                    </span>
-
-                    <button
-                      onClick={() => handleIncreaseQuantity(item)}
-                      className="flex items-center justify-center w-8 h-8 text-white bg-zinc-600 rounded hover:bg-zinc-500 transition-colors"
-                    >
-                      <RiAddLine size={16} />
-                    </button>
-
-                    <button
-                      onClick={() => removeFromCart(item.id)}
-                      className="flex items-center justify-center w-8 h-8 text-red-400 hover:text-red-300 transition-colors ml-2"
-                    >
-                      <RiDeleteBin6Line size={18} />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                  Vaciar carrito
+                </button>
+              </div>
             </div>
+
+            <CartList
+              cart={cart}
+              onIncrease={handleIncreaseQuantity}
+              onDecrease={handleDecreaseQuantity}
+              onRemove={removeFromCart}
+            />
+
+            <CartSummary
+              totalItems={getTotalItems()}
+              totalPrice={getTotalPrice()}
+              onClearCart={clearCart}
+              onStartCheckout={handleStartCheckout}
+            />
           </div>
 
-          <div className="border-t border-zinc-700 bg-zinc-800 px-6 py-4">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-white text-xl font-semibold">Total:</span>
-              <span className="text-white text-2xl font-bold">
-                ${getTotalPrice().toFixed(2)}
-              </span>
-            </div>
-
-            <div className="flex flex-col items-center gap-3">
-              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg text-lg transition-colors">
-                Proceder con el Pago
-              </button>
-              <Link
-                to="/"
-                className="text-zinc-400 hover:text-white text-sm transition-colors"
-              >
-                ← Continuar comprando
-              </Link>
-            </div>
+          <div className="lg:sticky lg:top-24 lg:self-start">
+            <CheckoutSection
+              showCheckout={showCheckout}
+              onSubmit={handleCheckoutSubmit}
+              isSubmitting={isSubmitting}
+              error={error}
+              onBackToCart={handleBackToCart}
+            />
           </div>
         </div>
       </div>

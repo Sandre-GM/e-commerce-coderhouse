@@ -95,9 +95,6 @@ export default function CartDropdown({ isOpen, onClose }) {
                 </div>
 
                 <div className="flex flex-col items-center gap-2">
-                  <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
-                    Proceder al pago
-                  </button>
                   <Link
                     to="/cart"
                     className="w-full bg-white hover:bg-blue-700 hover:text-white text-center font-black text-blue-600  py-2 px-4 rounded-lg transition-colors"
